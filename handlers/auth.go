@@ -66,6 +66,7 @@ func (h *handlerAuth) Register(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
 		json.NewEncoder(w).Encode(response)
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)

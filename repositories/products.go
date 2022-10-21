@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"time"
 	"waysfood/models"
 
 	"gorm.io/gorm"
@@ -11,6 +10,8 @@ type ProductRepository interface {
 	FindProducts() ([]models.Product, error)
 	GetProduct(ID int) (models.Product, error)
 	CreateProduct(product models.Product) (models.Product, error)
+	UpdateProduct(product models.Product) (models.Product, error)
+	DeleteProduct(product models.Product) (models.Product, error)
 }
 
 func RepositoryProduct(db *gorm.DB) *repository {
@@ -32,7 +33,19 @@ func (r *repository) GetProduct(ID int) (models.Product, error) {
 }
 
 func (r *repository) CreateProduct(product models.Product) (models.Product, error) {
-	err := r.db.Exec("INSERT INTO products(title, image, price, user_id, created_at, updated_at) VALUE(?,?,?,?,?,?)", product.Title, product.Image, product.Price, product.UserID, time.Now(), time.Now()).Error
+	err := r.db.Create(&product).Error
+
+	return product, err
+}
+
+func (r *repository) UpdateProduct(product models.Product) (models.Product, error) {
+	err := r.db.Save(&product).Error
+
+	return product, err
+}
+
+func (r *repository) DeleteProduct(product models.Product) (models.Product, error) {
+	err := r.db.Delete(&product).Error
 
 	return product, err
 }
