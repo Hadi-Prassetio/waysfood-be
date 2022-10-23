@@ -15,4 +15,5 @@ func UserRoutes(r *mux.Router) {
 
 	r.HandleFunc("/users", h.FindUsers).Methods("GET")
 	r.HandleFunc("/user/{id}", middleware.Auth(h.GetUser)).Methods("GET")
+	r.HandleFunc("/user/{id}", middleware.Auth(middleware.UploadFile(h.UpdateUser))).Methods("PATCH")
 }
