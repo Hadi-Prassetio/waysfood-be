@@ -9,6 +9,7 @@ import (
 	"waysfood/repositories"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/gorilla/mux"
 )
 
@@ -30,6 +31,11 @@ func (h *handlerUser) FindUsers(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
+
+	for i, p := range users {
+		users[i].Image = path_file + p.Image
+	}
+
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Code: http.StatusOK, Data: users}
 	json.NewEncoder(w).Encode(response)
@@ -47,6 +53,9 @@ func (h *handlerUser) GetUser(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
+
+	user.Image = path_file + user.Image
+
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Code: http.StatusOK, Data: user}
 	json.NewEncoder(w).Encode(response)
@@ -55,7 +64,9 @@ func (h *handlerUser) GetUser(w http.ResponseWriter, r *http.Request) {
 func (h *handlerUser) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+	// id, _ := strconv.Atoi(mux.Vars(r)["id"])
+	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
+	id := int(userInfo["id"].(float64))
 
 	dataContex := r.Context().Value("dataFile") // add this code
 	filename := dataContex.(string)             // add this code
