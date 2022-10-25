@@ -19,7 +19,7 @@ func RepositoryOrder(db *gorm.DB) *repository {
 	return &repository{db}
 }
 
-func (r *repository) FindOrders() ([]models.Order, error) {
+func (r *repository) FindOrder() ([]models.Order, error) {
 	var orders []models.Order
 	err := r.db.Preload("Product").Find(&orders).Error
 
@@ -35,7 +35,7 @@ func (r *repository) GetOrder(ID int) (models.Order, error) {
 
 func (r *repository) GetCartID(UserID int) (models.Cart, error) {
 	var cart models.Cart
-	err := r.db.Where("user_id = ? AND status = ?", UserID, "pending").First(&cart).Error
+	err := r.db.Preload("User").Preload("Order").Preload("Order.Product").Where("user_id = ? AND status = ?", UserID, "pending").First(&cart).Error
 	return cart, err
 }
 

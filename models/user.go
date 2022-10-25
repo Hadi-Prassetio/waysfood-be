@@ -12,9 +12,9 @@ type User struct {
 	Phone        string        `json:"phone" gorm:"type: varchar(255)"`
 	Role         string        `json:"role" gorm:"type: varchar(255)"`
 	Location     string        `json:"location" gorm:"type: varchar(255)"`
-	Products     []ProductUser `json:"product"`
-	Carts        []Cart        `json:"cart"`
-	Transactions []Transaction `json:"transaction"`
+	Products     []ProductUser `json:"products"`
+	Carts        []Cart        `json:"carts"`
+	Transactions []Transaction `json:"transactions"`
 	CreatedAt    time.Time     `json:"-"`
 	UpdatedAt    time.Time     `json:"-"`
 }
