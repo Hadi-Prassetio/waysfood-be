@@ -2,7 +2,7 @@ package models
 
 type Cart struct {
 	ID       int         `json:"id"  gorm:"primary_key:auto_increment"`
-	UserID   int         `json:"user_id"`
+	UserID   int         `json:"-"`
 	User     UserProfile `json:"user"`
 	Order    []Order     `json:"order"`
 	Qty      int         `json:"qty"`
