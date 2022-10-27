@@ -7,6 +7,7 @@ import (
 	"waysfood/pkg/mysql"
 	"waysfood/routes"
 
+	"github.com/gorilla/handlers"
 	"github.com/joho/godotenv"
 
 	"github.com/gorilla/mux"
@@ -29,8 +30,12 @@ func main() {
 
 	r.PathPrefix("/uploads").Handler(http.StripPrefix("/uploads/", http.FileServer(http.Dir("./uploads"))))
 
+	var AllowedHeaders = handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
+	var AllowedMethods = handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS", "PATCH", "DELETE"})
+	var AllowedOrigins = handlers.AllowedOrigins([]string{"*"})
+
 	var port = "5000"
 	fmt.Println("server running localhost:" + port)
 
-	http.ListenAndServe("localhost:5000", r)
+	http.ListenAndServe("localhost:"+port, handlers.CORS(AllowedHeaders, AllowedMethods, AllowedOrigins)(r))
 }

@@ -23,3 +23,13 @@ type ResponseLogin struct {
 	Role     string `json:"role"`
 	Token    string `json:"token"`
 }
+
+type CheckAuthResponse struct {
+	ID       int    `json:"id"`
+	Fullname string `gorm:"type: varchar(255)" json:"fullname"`
+	Email    string `gorm:"type: varchar(255)" json:"email"`
+	Gender   string `json:"gender"`
+	Phone    string `json:"phone"`
+	Role     string `json:"role"`
+	Image    string `json:"image"`
+}
