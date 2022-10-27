@@ -14,7 +14,8 @@ type User struct {
 	Location     string        `json:"location" gorm:"type: varchar(255)"`
 	Products     []ProductUser `json:"products"`
 	Carts        []Cart        `json:"carts"`
-	Transactions []Transaction `json:"transactions"`
+	Transactions []Transaction `json:"transactions" gorm:"foreignKey:BuyerID"`
+	Incomes      []Transaction `json:"incomes" gorm:"foreignKey:SellerID"`
 	CreatedAt    time.Time     `json:"-"`
 	UpdatedAt    time.Time     `json:"-"`
 }

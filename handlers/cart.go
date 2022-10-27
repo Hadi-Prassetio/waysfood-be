@@ -181,20 +181,3 @@ func (h *handlerCart) FindbyIDCart(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-func (h *handlerCart) AllProductById(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
-	userId := int(userInfo["id"].(float64))
-
-	Carts, err := h.CartRepository.AllProductById(userId)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
-		json.NewEncoder(w).Encode(response)
-	}
-
-	w.WriteHeader(http.StatusOK)
-	response := dto.SuccessResult{Code: 200, Data: Carts}
-	json.NewEncoder(w).Encode(response)
-}

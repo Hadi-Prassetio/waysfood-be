@@ -7,10 +7,17 @@ import (
 	"waysfood/pkg/mysql"
 	"waysfood/routes"
 
+	"github.com/joho/godotenv"
+
 	"github.com/gorilla/mux"
 )
 
 func main() {
+
+	errEnv := godotenv.Load()
+	if errEnv != nil {
+		panic("Failed to load env file")
+	}
 
 	mysql.DataBaseInit()
 

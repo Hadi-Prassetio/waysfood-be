@@ -14,7 +14,6 @@ type CartRepository interface {
 	UpdateCart(Cart models.Cart) (models.Cart, error)
 	FindbyIDCart(CartId int, Status string) (models.Cart, error)
 	GetOneCart(ID int) (models.Cart, error)
-	AllProductById(UserID int) ([]models.Cart, error)
 }
 
 func RepositoryCart(db *gorm.DB) *repository {
@@ -60,13 +59,6 @@ func (r *repository) FindbyIDCart(CartId int, Status string) (models.Cart, error
 func (r *repository) GetOneCart(ID int) (models.Cart, error) {
 	var Cart models.Cart
 	err := r.db.Preload("Product").Preload("Product.User").Preload("Buyer").Preload("Seller").First(&Cart, "id = ?", ID).Error
-
-	return Cart, err
-}
-
-func (r *repository) AllProductById(UserID int) ([]models.Cart, error) {
-	var Cart []models.Cart
-	err := r.db.Preload("User").Preload("Carts").Preload("Carts.Product").Find(&Cart, "user_id = ?", UserID).Error
 
 	return Cart, err
 }

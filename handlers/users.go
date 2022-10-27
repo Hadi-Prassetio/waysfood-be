@@ -41,6 +41,25 @@ func (h *handlerUser) FindUsers(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+func (h *handlerUser) FindPartners(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "aplication-json")
+
+	users, err := h.UserRepository.FindPartners("partner")
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+	for i, p := range users {
+		users[i].Image = path_file + p.Image
+	}
+
+	w.WriteHeader(http.StatusOK)
+	response := dto.SuccessResult{Code: http.StatusOK, Data: users}
+	json.NewEncoder(w).Encode(response)
+}
+
 func (h *handlerUser) GetUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "aplication-json")
 
