@@ -52,6 +52,14 @@ func (h *handlerAuth) Register(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 	}
 
+	dataEmail, _ := h.AuthRepository.Login(request.Email)
+	if dataEmail.Email != "" {
+		w.WriteHeader(http.StatusBadRequest)
+		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: "Email has been used"}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
 	user := models.User{
 		Fullname: request.Fullname,
 		Email:    request.Email,
@@ -124,9 +132,12 @@ func (h *handlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	loginResponse := authdto.ResponseLogin{
+		ID:       user.ID,
 		Fullname: user.Fullname,
 		Email:    user.Email,
-		Password: user.Password,
+		Phone:    user.Phone,
+		Role:     user.Role,
+		Gender:   user.Gender,
 		Token:    token,
 	}
 
@@ -154,10 +165,12 @@ func (h *handlerAuth) CheckAuth(w http.ResponseWriter, r *http.Request) {
 	CheckAuthResponse := authdto.CheckAuthResponse{
 		ID:       user.ID,
 		Fullname: user.Fullname,
+		Gender:   user.Gender,
 		Email:    user.Email,
 		Phone:    user.Phone,
 		Image:    user.Image,
 		Role:     user.Role,
+		Location: user.Location,
 	}
 
 	w.Header().Set("Content-Type", "application/json")

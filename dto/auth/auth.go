@@ -15,9 +15,9 @@ type RequestLogin struct {
 }
 
 type ResponseLogin struct {
+	ID       int    `json:"id"`
 	Email    string `json:"email"`
 	Fullname string `json:"fullname"`
-	Password string `json:"password" `
 	Gender   string `json:"gender"`
 	Phone    string `json:"phone"`
 	Role     string `json:"role"`
@@ -32,4 +32,5 @@ type CheckAuthResponse struct {
 	Phone    string `json:"phone"`
 	Role     string `json:"role"`
 	Image    string `json:"image"`
+	Location string `json:"location"`
 }
