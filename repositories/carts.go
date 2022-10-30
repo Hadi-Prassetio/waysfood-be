@@ -51,7 +51,7 @@ func (r *repository) DeleteCart(Cart models.Cart) (models.Cart, error) {
 
 func (r *repository) FindbyIDCart(CartId int, Status string) (models.Cart, error) {
 	var Cart models.Cart
-	err := r.db.Preload("User").Preload("Order").Preload("Order.Product").Where("user_id = ? AND status = ?", CartId, Status).First(&Cart).Error
+	err := r.db.Preload("User").Preload("Order").Preload("Order.Product").Preload("Order.Product.User").Where("user_id = ? AND status = ?", CartId, Status).First(&Cart).Error
 
 	return Cart, err
 }

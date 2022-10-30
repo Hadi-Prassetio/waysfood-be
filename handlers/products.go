@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 	"strconv"
 	productdto "waysfood/dto/product"
 	dto "waysfood/dto/result"
@@ -13,8 +14,6 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/gorilla/mux"
 )
-
-var path_file = "http://localhost:5000/uploads/"
 
 type handlerProduct struct {
 	ProductRepository repositories.ProductRepository
@@ -35,7 +34,8 @@ func (h *handlerProduct) FindProducts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for i, p := range products {
-		products[i].Image = path_file + p.Image
+		imagePath := os.Getenv("PATH_FILE") + p.Image
+		products[i].Image = imagePath
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -55,7 +55,7 @@ func (h *handlerProduct) GetProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	product.Image = path_file + product.Image
+	product.Image = os.Getenv("PATH_FILE") + product.Image
 
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Code: http.StatusOK, Data: product}

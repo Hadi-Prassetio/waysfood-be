@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 	"strconv"
 	dto "waysfood/dto/result"
 	userdto "waysfood/dto/user"
@@ -33,7 +34,8 @@ func (h *handlerUser) FindUsers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for i, p := range users {
-		users[i].Image = path_file + p.Image
+		imagePath := os.Getenv("PATH_FILE") + p.Image
+		users[i].Image = imagePath
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -52,7 +54,8 @@ func (h *handlerUser) FindPartners(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	for i, p := range users {
-		users[i].Image = path_file + p.Image
+		imagePath := os.Getenv("PATH_FILE") + p.Image
+		users[i].Image = imagePath
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -73,7 +76,7 @@ func (h *handlerUser) GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user.Image = path_file + user.Image
+	user.Image = os.Getenv("PATH_FILE") + user.Image
 
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Code: http.StatusOK, Data: user}
