@@ -21,7 +21,7 @@ func RepositoryTransaction(db *gorm.DB) *repository {
 
 func (r *repository) FindTransactions(ID int) ([]models.Transaction, error) {
 	var transactions []models.Transaction
-	err := r.db.Preload("Cart").Preload("Cart.Order").Preload("Buyer").Find(&transactions, "buyer_id = ?", ID).Error
+	err := r.db.Preload("Cart").Preload("Cart.Order.Product.User").Preload("Buyer").Find(&transactions, "buyer_id = ?", ID).Error
 
 	return transactions, err
 }
@@ -52,15 +52,10 @@ func (r *repository) UpdateTransaction(status string, ID string) error {
 	var transaction models.Transaction
 	r.db.Preload("Cart").Preload("Cart.Order").First(&transaction, ID)
 
-	// // If is different & Status is "success" decrement product quantity
-	// if status != transaction.Status && status == "success" {
-	// 	var product models.Product
-	// 	r.db.First(&product, transaction.Product.ID)
-	// 	product.Qty = product.Qty - 1
-	// 	r.db.Save(&product)
-	// }
-
-	// transaction.Status = status
+	// If is different & Status is "success" decrement product quantity
+	if status != transaction.Status && status == "success" {
+		transaction.Status = status
+	}
 
 	err := r.db.Save(&transaction).Error
 
