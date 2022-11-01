@@ -21,14 +21,14 @@ func RepositoryTransaction(db *gorm.DB) *repository {
 
 func (r *repository) FindTransactions(ID int) ([]models.Transaction, error) {
 	var transactions []models.Transaction
-	err := r.db.Preload("Cart").Preload("Cart.Order").Preload("Buyer").Preload("Seller").Find(&transactions, "buyer_id = ?", ID).Error
+	err := r.db.Preload("Cart").Preload("Cart.Order").Preload("Buyer").Find(&transactions, "buyer_id = ?", ID).Error
 
 	return transactions, err
 }
 
 func (r *repository) GetTransaction(ID int) (models.Transaction, error) {
 	var transactions models.Transaction
-	err := r.db.Preload("Cart").Preload("Cart.Order").Preload("Buyer").Preload("Seller").Find(&transactions, "id = ?", ID).Error
+	err := r.db.Preload("Cart").Preload("Cart.Order").Preload("Buyer").Find(&transactions, "id = ?", ID).Error
 
 	return transactions, err
 }
@@ -36,13 +36,13 @@ func (r *repository) GetTransaction(ID int) (models.Transaction, error) {
 // Create GetOneTransaction method here ...
 func (r *repository) GetOneTransaction(ID string) (models.Transaction, error) {
 	var transaction models.Transaction
-	err := r.db.Preload("Cart").Preload("Cart.Order").Preload("Buyer").Preload("Seller").First(&transaction, "id = ?", ID).Error
+	err := r.db.Preload("Cart").Preload("Cart.Order").Preload("Buyer").First(&transaction, "id = ?", ID).Error
 
 	return transaction, err
 }
 
 func (r *repository) CreateTransaction(transactions models.Transaction) (models.Transaction, error) {
-	err := r.db.Preload("Cart").Preload("Cart.Order").Preload("Buyer").Preload("Seller").Create(&transactions).Error
+	err := r.db.Create(&transactions).Error
 
 	return transactions, err
 }

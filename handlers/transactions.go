@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -150,12 +149,6 @@ func (h *handlerTransaction) Notification(w http.ResponseWriter, r *http.Request
 	fraudStatus := notificationPayload["fraud_status"].(string)
 	orderId := notificationPayload["order_id"].(string)
 
-	fmt.Println("INI MASUK NOTIFIKASI STATUS :", transactionStatus)
-	fmt.Println("INI MASUK NOTIFIKASI FRAUD STATUS :", fraudStatus)
-	fmt.Println("INI MASUK NOTIFIKASI FRAUD ORDERID :", orderId)
-
-	// transaction, _ := h.TransactionRepository.GetOneTransaction(orderId)
-
 	if transactionStatus == "capture" {
 		if fraudStatus == "challenge" {
 			// TODO set transaction status on your database to 'challenge'
@@ -163,21 +156,17 @@ func (h *handlerTransaction) Notification(w http.ResponseWriter, r *http.Request
 			h.TransactionRepository.UpdateTransaction("pending", orderId)
 		} else if fraudStatus == "accept" {
 			// TODO set transaction status on your database to 'success'
-			// SendMail("success", transaction)
 			h.TransactionRepository.UpdateTransaction("success", orderId)
 		}
 	} else if transactionStatus == "settlement" {
 		// TODO set transaction status on your databaase to 'success'
-		// SendMail("success", transaction)
 		h.TransactionRepository.UpdateTransaction("success", orderId)
 	} else if transactionStatus == "deny" {
 		// TODO you can ignore 'deny', because most of the time it allows payment retries
 		// and later can become success
-		// SendMail("failed", transaction)
 		h.TransactionRepository.UpdateTransaction("failed", orderId)
 	} else if transactionStatus == "cancel" || transactionStatus == "expire" {
 		// TODO set transaction status on your databaase to 'failure'
-		// SendMail("failed", transaction)
 		h.TransactionRepository.UpdateTransaction("failed", orderId)
 	} else if transactionStatus == "pending" {
 		// TODO set transaction status on your databaase to 'pending' / waiting payment
