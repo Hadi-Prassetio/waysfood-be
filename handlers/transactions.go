@@ -58,7 +58,7 @@ func (h *handlerTransaction) CreateTransaction(w http.ResponseWriter, r *http.Re
 	w.Header().Set("Content-Type", "application/json")
 
 	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
-	userId := int(userInfo["id"].(float64))
+	cartId := int(userInfo["id"].(float64))
 
 	var request transactiondto.RequestTransaction
 	err := json.NewDecoder(r.Body).Decode(&request)
@@ -69,17 +69,24 @@ func (h *handlerTransaction) CreateTransaction(w http.ResponseWriter, r *http.Re
 		return
 	}
 
+	cart, err := h.TransactionRepository.GetCartTransaction(cartId, "pending")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
 	// Create Unique Transaction Id here ...
 	time := time.Now()
 	miliTime := time.Unix()
 
 	transaction := models.Transaction{
-		ID:       int(miliTime),
-		CartID:   request.CartID,
-		BuyerID:  userId,
-		SellerID: request.SellerID,
-		Total:    request.Total,
-		Status:   "pending",
+		ID:      int(miliTime),
+		CartID:  cart.ID,
+		BuyerID: cartId,
+		Total:   request.Total,
+		Status:  "pending",
 	}
 
 	log.Print(transaction)

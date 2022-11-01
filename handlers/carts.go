@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-	"time"
 	cartdto "waysfood/dto/cart"
 	dto "waysfood/dto/result"
 	"waysfood/models"
@@ -78,11 +77,11 @@ func (h *handlerCart) CreateCart(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 	}
 
-	time := time.Now()
-	miliTime := time.Unix()
+	// time := time.Now()
+	// miliTime := time.Unix()
 
 	cart := models.Cart{
-		ID:     int(miliTime),
+		// ID:     int(miliTime),
 		UserID: idUser,
 		Status: "pending",
 	}
