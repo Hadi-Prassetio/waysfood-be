@@ -77,11 +77,7 @@ func (h *handlerCart) CreateCart(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 	}
 
-	// time := time.Now()
-	// miliTime := time.Unix()
-
 	cart := models.Cart{
-		// ID:     int(miliTime),
 		UserID: idUser,
 		Status: "pending",
 	}
@@ -173,6 +169,7 @@ func (h *handlerCart) FindbyIDCart(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
 		json.NewEncoder(w).Encode(response)
+		return
 	}
 
 	w.WriteHeader(http.StatusOK)

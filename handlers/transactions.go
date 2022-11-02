@@ -53,6 +53,28 @@ func (h *handlerTransaction) FindTransactions(w http.ResponseWriter, r *http.Req
 	json.NewEncoder(w).Encode(response)
 }
 
+func (h *handlerTransaction) FindIncomes(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
+	userId := int(userInfo["id"].(float64))
+
+	incomes, err := h.TransactionRepository.FindIncomes(userId)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(err.Error())
+	}
+
+	// var responseTransaction []models.Transaction
+	// for _, t := range incomes {
+	// 	responseTransaction = append(responseTransaction, convertResponseTransaction(t))
+	// }
+
+	w.WriteHeader(http.StatusOK)
+	response := dto.SuccessResult{Code: http.StatusOK, Data: incomes}
+	json.NewEncoder(w).Encode(response)
+}
+
 func (h *handlerTransaction) CreateTransaction(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -81,12 +103,12 @@ func (h *handlerTransaction) CreateTransaction(w http.ResponseWriter, r *http.Re
 	miliTime := time.Unix()
 
 	transaction := models.Transaction{
-		ID:      int(miliTime),
-		CartID:  cart.ID,
-		BuyerID: cartId,
-		SelerID: request.SellerID,
-		Total:   request.Total,
-		Status:  "pending",
+		ID:       int(miliTime),
+		CartID:   cart.ID,
+		BuyerID:  cartId,
+		SellerID: request.SellerID,
+		Total:    request.Total,
+		Status:   "pending",
 	}
 
 	log.Print(transaction)
