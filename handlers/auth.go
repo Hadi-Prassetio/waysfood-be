@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 	authdto "waysfood/dto/auth"
 	dto "waysfood/dto/result"
@@ -172,6 +173,8 @@ func (h *handlerAuth) CheckAuth(w http.ResponseWriter, r *http.Request) {
 		Role:     user.Role,
 		Location: user.Location,
 	}
+
+	CheckAuthResponse.Image = os.Getenv("PATH_FILE") + CheckAuthResponse.Image
 
 	w.Header().Set("Content-Type", "application/json")
 	response := dto.SuccessResult{Code: http.StatusOK, Data: CheckAuthResponse}

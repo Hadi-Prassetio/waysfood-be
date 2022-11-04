@@ -78,6 +78,11 @@ func (h *handlerUser) GetUser(w http.ResponseWriter, r *http.Request) {
 
 	user.Image = os.Getenv("PATH_FILE") + user.Image
 
+	for i, p := range user.Products {
+		imagePath := os.Getenv("PATH_FILE") + p.Image
+		user.Products[i].Image = imagePath
+	}
+
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Code: http.StatusOK, Data: user}
 	json.NewEncoder(w).Encode(response)
